@@ -1,0 +1,7 @@
+# Environments
+# Ignore virtual environment
+linear-regression-feature-scaling/venv/
+
+# Ignore environment variables
+linear-regression-feature-scaling/.env
+!linear-regression-feature-scaling/.env.example

@@ -1,0 +1,4 @@
+# ipykernel  # For Jupyter Notebook support
+numpy
+matplotlib
+scikit-learn
