@@ -7,6 +7,7 @@ Minimal, side-by-side examples showing **sequential** vs **concurrent** async ex
 3. `03_gather_concurrent.py` — runs both concurrently with `asyncio.gather` (~5s total).
 4. `04_error_handling_taskgroup_vs_gather.py` — compares **error propagation & cancellation** in `TaskGroup` vs `gather` (with and without `return_exceptions=True`).
 5. `05_chained_dependencies.py` — demonstrates how task dependencies and result access patterns affect execution flow when chaining async functions.
+6. `06_queue_dependencies.py` — shows how to optimize task dependencies using `asyncio.Queue` to start dependent tasks immediately when their prerequisites complete (~5s total vs ~8s in example 5).
 
 > Context: This repo's experiments are small, focused, and reproducible. This one complements ML service work by clarifying when async I/O lifts throughput without extra processes or threads. 
 >
@@ -40,6 +41,7 @@ asyncio-concurrency-basics/
 ├─ 03_gather_concurrent.py
 ├─ 04_error_handling_taskgroup_vs_gather.py
 ├─ 05_chained_dependencies.py
+├─ 06_queue_dependencies.py
 └─ README.md
 ```
 
@@ -66,6 +68,9 @@ python 04_error_handling_taskgroup_vs_gather.py
 
 # Explore task dependencies and result access patterns
 python 05_chained_dependencies.py
+
+# See how Queue optimizes task dependencies
+python 06_queue_dependencies.py
 ```
 
 Expected console output pattern (times will vary slightly):
@@ -104,3 +109,11 @@ For `05_chained_dependencies.py`, you'll see:
 - Even though `second()` finishes in ~2s and `third()` needs its result, `third()` won't start until `first()` (~5s) also completes.
 - Total execution time is ~8s: ~5s for concurrent execution of first and second, plus ~3s for third to run sequentially afterwards.
 - It's not possible to start `third()` immediately after `second()` completes while inside a TaskGroup, as accessing a task's result with `.result()` while the task is still running raises an InvalidStateError.
+
+For `06_queue_dependencies.py`, you'll see:
+- Uses `asyncio.Queue` to optimize the execution flow from example 5
+- Second task puts its result in the queue as soon as it completes (~2s)
+- Third task starts immediately after getting the result from the queue
+- First task continues running independently until completion (~5s)
+- Total execution time reduced to ~5s (vs ~8s in example 5)
+- Demonstrates how queues enable more efficient task dependency management
