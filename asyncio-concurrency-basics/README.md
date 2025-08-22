@@ -8,6 +8,7 @@ Minimal, side-by-side examples showing **sequential** vs **concurrent** async ex
 4. `04_error_handling_taskgroup_vs_gather.py` — compares **error propagation & cancellation** in `TaskGroup` vs `gather` (with and without `return_exceptions=True`).
 5. `05_chained_dependencies.py` — demonstrates how task dependencies and result access patterns affect execution flow when chaining async functions.
 6. `06_queue_dependencies.py` — shows how to optimize task dependencies using `asyncio.Queue` to start dependent tasks immediately when their prerequisites complete (~5s total vs ~8s in example 5).
+7. `07_chained_auxiliary.py` — provides an alternative to queue-based dependency handling using auxiliary functions, comparing the tradeoffs between both approaches.
 
 > Context: This repo's experiments are small, focused, and reproducible. This one complements ML service work by clarifying when async I/O lifts throughput without extra processes or threads. 
 >
@@ -42,6 +43,7 @@ asyncio-concurrency-basics/
 ├─ 04_error_handling_taskgroup_vs_gather.py
 ├─ 05_chained_dependencies.py
 ├─ 06_queue_dependencies.py
+├─ 07_chained_auxiliary.py
 └─ README.md
 ```
 
@@ -71,6 +73,9 @@ python 05_chained_dependencies.py
 
 # See how Queue optimizes task dependencies
 python 06_queue_dependencies.py
+
+# Compare queue vs auxiliary function approaches
+python 07_chained_auxiliary.py
 ```
 
 Expected console output pattern (times will vary slightly):
@@ -117,3 +122,12 @@ For `06_queue_dependencies.py`, you'll see:
 - First task continues running independently until completion (~5s)
 - Total execution time reduced to ~5s (vs ~8s in example 5)
 - Demonstrates how queues enable more efficient task dependency management
+
+For `07_chained_auxiliary.py`, you'll see:
+- Provides a simpler alternative using an auxiliary function to chain dependent tasks
+- Both queue and auxiliary approaches achieve similar timing (~5s) for simple cases
+- Key differences in practice:
+  * Queue approach: Better for complex scenarios with multiple consumers, dynamic task creation, or when decoupling is needed
+  * Auxiliary approach: Better for simple, linear dependencies with fixed execution sequences
+  * Error handling differs: queue allows per-task error handling, auxiliary affects the entire chain
+  * Resource usage: queue has slight overhead but more flexibility, auxiliary is more memory efficient for simple chains

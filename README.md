@@ -19,7 +19,7 @@ Each experiment is organized in its own folder with an explanatory `README.md` a
 ## 📂 Available Experiments
 [Back to ToC](#toc)
 
-- `/asyncio-concurrency-basics`: Six minimal Python asyncio examples showing sequential vs concurrent execution with TaskGroup (3.11+) and gather, plus error-handling, task dependencies, and queue-based optimization patterns; includes timings and notes on structured concurrency. This one complements ML service work by clarifying async I/O issues.
+- `/asyncio-concurrency-basics`: Seven minimal Python asyncio examples showing sequential vs concurrent execution with TaskGroup (3.11+) and gather, plus error-handling, task dependencies, queue-based optimization patterns, and comparison of dependency management approaches; includes timings and notes on structured concurrency. This one complements ML service work by clarifying async I/O issues.
 
 - `/linear-regression-feature-scaling`: Investigates the impact of feature scaling and nonlinear transformations on linear regression models, with and without regularization.
 
