@@ -12,7 +12,6 @@ Each experiment is organized in its own folder with an explanatory `README.md` a
 - [Contributing](#contributing)
 - [License](#license)
 
-
 ---
 
 <a name="experiments"/></a>
@@ -20,6 +19,8 @@ Each experiment is organized in its own folder with an explanatory `README.md` a
 [Back to ToC](#toc)
 
 - `/asyncio-concurrency-basics`: Seven minimal Python asyncio examples showing sequential vs concurrent execution with TaskGroup (3.11+) and gather, plus error-handling, task dependencies, queue-based optimization patterns, and comparison of dependency management approaches; includes timings and notes on structured concurrency. This one complements ML service work by clarifying async I/O issues.
+
+- `/oop-inheritance-basics`: Seven focused examples demonstrating key Object-Oriented Programming concepts through practical Python implementations. Covers single and multiple inheritance, method overriding, abstract base classes, protocols, mixin patterns, and property inheritance with descriptors. Each example builds upon previous concepts while remaining independently executable.
 
 - `/linear-regression-feature-scaling`: Investigates the impact of feature scaling and nonlinear transformations on linear regression models, with and without regularization.
 
