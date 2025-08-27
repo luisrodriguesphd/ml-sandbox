@@ -1,6 +1,6 @@
 # 🧠 ml-sandbox
 
-This repository contains practical experiments and studies on core Machine Learning concepts, including regression, classification, regularization, feature transformations, and model evaluation.
+This repository combines machine learning concepts with supporting software engineering practices. It includes both ML-focused experiments (regression, feature scaling) and auxiliary examples of software patterns (async I/O, OOP) that are crucial for building robust ML systems.
 
 Each experiment is organized in its own folder with an explanatory `README.md` and executable Python scripts or Jupyter notebooks.
 
@@ -20,9 +20,9 @@ Each experiment is organized in its own folder with an explanatory `README.md` a
 
 - `/asyncio-concurrency-basics`: Seven minimal Python asyncio examples showing sequential vs concurrent execution with TaskGroup (3.11+) and gather, plus error-handling, task dependencies, queue-based optimization patterns, and comparison of dependency management approaches; includes timings and notes on structured concurrency. This one complements ML service work by clarifying async I/O issues.
 
-- `/oop-inheritance-basics`: Seven focused examples demonstrating key Object-Oriented Programming concepts through practical Python implementations. Covers single and multiple inheritance, method overriding, abstract base classes, protocols, mixin patterns, and property inheritance with descriptors. Each example builds upon previous concepts while remaining independently executable.
-
 - `/linear-regression-feature-scaling`: Investigates the impact of feature scaling and nonlinear transformations on linear regression models, with and without regularization.
+
+- `/oop-inheritance-basics`: Seven focused examples demonstrating key Object-Oriented Programming concepts through practical Python implementations. Covers single and multiple inheritance, method overriding, abstract base classes, protocols, mixin patterns, and property inheritance with descriptors. Each example builds upon previous concepts while remaining independently executable.
 
 ---
 
@@ -30,7 +30,7 @@ Each experiment is organized in its own folder with an explanatory `README.md` a
 ## 🎯 Purpose
 [Back to ToC](#toc)
 
-To provide a well-structured and hands-on space for testing hypotheses, validating theoretical concepts, and sharing insights related to traditional machine learning (excluding deep learning for now).
+To provide a well-structured and hands-on space for exploring both machine learning concepts and the software engineering practices needed to implement them effectively in production systems. The experiments cover not just ML algorithms and techniques, but also the architectural patterns and design principles that enable robust ML services.
 
 ---
 
