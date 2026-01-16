@@ -9,6 +9,7 @@ Minimal, focused examples demonstrating key Object-Oriented Programming concepts
 5. `05_interfaces_protocols.py` — demonstrates Python's approach to interfaces using protocols.
 6. `06_mixin_patterns.py` — illustrates the mixin pattern for code reuse.
 7. `07_property_inheritance.py` — explores property inheritance and descriptor patterns.
+8. `08_class_methods.py` — demonstrates class methods, alternative constructors, and class-level operations.
 
 > Context: This experiment complements the project by providing clear, practical examples of OOP concepts that are fundamental to well-structured software design. Each example builds upon previous concepts while remaining independently executable.
 
@@ -22,6 +23,7 @@ Minimal, focused examples demonstrating key Object-Oriented Programming concepts
 - Explore abstract classes and interface implementations
 - Master property inheritance and descriptor patterns
 - Practice mixin-based code reuse
+- Learn class methods and their use as alternative constructors
 
 ---
 
@@ -44,6 +46,7 @@ oop-inheritance-basics/
 ├─ 05_interfaces_protocols.py
 ├─ 06_mixin_patterns.py
 ├─ 07_property_inheritance.py
+├─ 08_class_methods.py
 └─ README.md
 ```
 
@@ -76,6 +79,9 @@ python 06_mixin_patterns.py
 
 # Run property inheritance example
 python 07_property_inheritance.py
+
+# Run class methods example
+python 08_class_methods.py
 ```
 
 The examples provide clear console output demonstrating the concepts in action.
