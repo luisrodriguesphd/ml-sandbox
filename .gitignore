@@ -1,3 +1,7 @@
+# Python bytecode cache
+__pycache__/
+*.pyc
+
 # Environments
 # Ignore virtual environment
 linear-regression-feature-scaling/venv/
