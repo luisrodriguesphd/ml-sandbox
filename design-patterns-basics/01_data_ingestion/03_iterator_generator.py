@@ -11,9 +11,10 @@ Example to implement:
       `__iter__`/`__next__` over a `FileSource`.
     - An idiomatic Python generator function equivalent, e.g.
       `stream_files(source)`, using `yield`.
-    - A `main()` demo that runs the same traversal through both a
-      `LocalFileSource` and a `GitHubRawFileSource` to show the iteration
-      logic is identical regardless of the underlying adapter.
+    - A `main()` demo that runs the same traversal through both the
+      `LocalFileSource` (Iris chunks) and the `GitHubRawFileSource` (Wine
+      chunks) to show the iteration logic is identical regardless of the
+      underlying adapter *or* what data it actually holds.
 
 Learning objectives:
     - Implement the Iterator pattern both the "classic" OOP way and the

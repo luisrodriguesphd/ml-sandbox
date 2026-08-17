@@ -43,7 +43,10 @@ through this folder — GoF foundations first, then one phase per problem.
 
 - Python 3.8+
 - `requests` (used only in `01_data_ingestion/`, for the GitHub-backed file
-  source) — the only third-party dependency across this folder
+  source) — the only runtime third-party dependency across this folder
+- `scikit-learn` — dev-only, used solely by
+  `01_data_ingestion/data/generate_data.py` to (re)generate the sample CSV
+  data; not required to run any of the pattern files themselves
 - Basic understanding of Python classes, objects, and the material in
   `../oop-inheritance-basics/`
 
@@ -56,6 +59,10 @@ design-patterns-basics/
 ├─ ROADMAP.md
 ├─ 01_data_ingestion/
 │  ├─ INSTRUCTIONS.md
+│  ├─ data/
+│  │  ├─ generate_data.py
+│  │  ├─ local/          # Iris CSV chunks (5 files)
+│  │  └─ remote/         # Wine CSV chunks (6 files)
 │  ├─ 01_singleton.py
 │  ├─ 02_adapter.py
 │  └─ 03_iterator_generator.py

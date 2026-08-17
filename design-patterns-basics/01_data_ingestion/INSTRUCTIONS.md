@@ -23,6 +23,25 @@ Together they form one coherent flow: `Iterator` pulls from a `FileSource`
 (Adapter), and the remote `FileSource` fetches through the shared client
 (Singleton).
 
+## Sample data
+
+Two unrelated scikit-learn toy datasets, chosen deliberately so the two
+`FileSource` adapters aren't just mirrors of each other's content — the
+Adapter pattern only needs to unify *how* you read a source, not what's in
+it:
+
+- `data/local/` — the **Iris** dataset, split into 5 CSV chunks of 30 rows
+  each (`iris_part01.csv` … `iris_part05.csv`), read straight off disk by
+  `LocalFileSource`.
+- `data/remote/` — the **Wine** dataset, split into 6 CSV chunks
+  (`wine_part01.csv` … `wine_part06.csv`, 30 rows each except the last at
+  28), fetched over HTTP by `GitHubRawFileSource` via this repo's public
+  raw GitHub URLs.
+
+Both were generated once by `data/generate_data.py` (requires
+`scikit-learn`, a dev-only tool — not a dependency of the pattern files
+themselves). Re-run it only if you want to regenerate the sample data.
+
 ## Files
 
 | File | Pattern | Summary |
