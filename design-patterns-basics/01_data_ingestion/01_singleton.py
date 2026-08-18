@@ -19,3 +19,44 @@ Learning objectives:
       is the right call in a data-engineering pipeline, and when a Singleton
       is overused / becomes a hidden global.
 """
+
+import requests
+
+
+#===================================================================
+# Implementation 1: Module-level singleton
+#===================================================================
+
+s = requests.Session()  # a single shared session for all requests
+
+
+class DownloadClientV1:
+    def __init__(self):
+        self.session = s  # always use the same session
+
+    def fetch(self, url):
+        return self.session.get(url)
+
+
+#class Echo:
+#    _instance = None
+#
+#    def __new__(cls):
+#        print("__new__ called")
+#        if cls._instance is None:
+#            cls._instance = super().__new__(cls)   # actually allocate, once
+#        return cls._instance
+#
+#    def __init__(self):
+#        print("__init__ called")
+#
+#a = Echo()
+#b = Echo()
+
+if __name__ == "__main__":
+    print("=== Singleton pattern (module-level) ===")
+    
+    client1 = DownloadClientV1()
+    client2 = DownloadClientV1()
+
+    print(client1.session is client2.session)  # True, same session object
