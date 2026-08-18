@@ -27,16 +27,26 @@ concern swappable without touching the others.
 | `02_strategy.py` | Strategy (Behavioral) | Swap feature-scaling algorithms at runtime. |
 | `03_observer.py` | Observer (Behavioral) | Notify epoch-end subscribers (logger, early stopping, checkpointing) from the training loop. |
 
-## Requirements *(placeholder — fill in once implemented)*
+## Requirements
 
-- Python 3.8+
+- Python 3.12+ (managed automatically by `uv`)
 - No third-party packages required (pure-Python model/strategy stand-ins;
   real `sklearn` models are an optional extension)
 
-## How to Run *(placeholder — fill in once implemented)*
+Dependencies are managed at the repo root via `uv` — see the root
+`pyproject.toml`/`uv.lock`. From the repo root, run:
 
 ```bash
-python 01_factory_method.py
-python 02_strategy.py
-python 03_observer.py
+uv sync
+```
+
+## How to Run
+
+From the repo root (or from within this folder, `uv` finds the project
+automatically):
+
+```bash
+uv run python 01_factory_method.py
+uv run python 02_strategy.py
+uv run python 03_observer.py
 ```

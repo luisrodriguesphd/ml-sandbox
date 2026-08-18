@@ -41,7 +41,7 @@ through this folder — GoF foundations first, then one phase per problem.
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.12+ (managed automatically by [`uv`](https://docs.astral.sh/uv/))
 - `requests` (used only in `01_data_ingestion/`, for the GitHub-backed file
   source) — the only runtime third-party dependency across this folder
 - `scikit-learn` — dev-only, used solely by
@@ -49,6 +49,13 @@ through this folder — GoF foundations first, then one phase per problem.
   data; not required to run any of the pattern files themselves
 - Basic understanding of Python classes, objects, and the material in
   `../oop-inheritance-basics/`
+
+Dependencies are managed at the repo root via `uv` (see the root
+`pyproject.toml`/`uv.lock`), not per-folder. From the repo root:
+
+```bash
+uv sync
+```
 
 ---
 
@@ -87,13 +94,14 @@ with the problem's framing and per-file learning goals.
 ## How to Run
 
 Once implemented, run each pattern file from within its problem folder,
-e.g.:
+prefixing with `uv run` (`uv` finds the repo-root project automatically, no
+manual venv activation needed):
 
 ```bash
 cd 01_data_ingestion
-python 01_singleton.py
-python 02_adapter.py
-python 03_iterator_generator.py
+uv run python 01_singleton.py
+uv run python 02_adapter.py
+uv run python 03_iterator_generator.py
 ```
 
 The examples will provide clear console output demonstrating each pattern

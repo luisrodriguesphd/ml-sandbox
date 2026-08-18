@@ -1,0 +1,18 @@
+[project]
+name = "ml-sandbox"
+version = "0.1.0"
+description = "Personal ML/Python learning sandbox"
+requires-python = ">=3.12"
+dependencies = [
+    "requests>=2.31",
+]
+
+[dependency-groups]
+dev = [
+    "scikit-learn>=1.4",
+]
+
+[tool.uv]
+# TLS on this machine is intercepted (corporate proxy/AV), so uv's bundled
+# cert bundle doesn't trust PyPI's cert chain; fall back to the OS cert store.
+system-certs = true
