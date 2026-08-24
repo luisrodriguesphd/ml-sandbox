@@ -30,4 +30,150 @@ Learning objectives:
     - See how Adapter composes with Singleton (the remote adapter reuses the
       shared download client) and sets up the source consumed by
       `03_iterator_generator.py`.
+    - Distinguish Adapter from other structural patterns: it makes two
+      incompatible interfaces work together without adding new behavior
+      (that's Decorator) or hiding a whole subsystem (that's Facade) — it
+      just translates.
 """
+
+import os
+import importlib
+
+from urllib.parse import urlparse
+
+
+# Python module names can't start with a digit, so we import the 
+# singleton implementation using `importlib` to avoid syntax errors. 
+# This allows us to access the `DownloadClientV3Alt2` class from the 
+# `01_singleton.py` file without directly importing it with a 
+# leading digit in the module name.
+DownloadClient = importlib.import_module("01_singleton").DownloadClientV3Alt2
+
+
+# Interface for file sources that data ingestion pipeline expects to use to read files, 
+# regardless of whether the source is local or remote.
+class FileSource:
+    def list_files(self):
+        """Return a list of file names available in the source."""
+        raise NotImplementedError
+
+    def read_file(self, name):
+        """Return the contents of the specified file as a string."""
+        raise NotImplementedError
+
+
+class LocalFileSource(FileSource):
+    def __init__(self, directory):
+        self.directory = directory
+
+    def list_files(self):
+        return os.listdir(self.directory)
+    
+    def read_file(self, name):
+        file_path = os.path.join(self.directory, name)
+        with open(file_path, 'r') as file:
+            return file.read()
+
+
+class GitHubRawFileSource(FileSource):
+    def __init__(self, base_url):
+        self.base_url = base_url
+        self.owner, self.repo, self.branch, self.path = self._parse_raw_url()
+        self.client = DownloadClient()  # Reuse the shared download client
+
+    def _parse_raw_url(self):
+        parsed = urlparse(self.base_url)
+        if parsed.netloc != "raw.githubusercontent.com":
+            raise ValueError(f"Expected a raw.githubusercontent.com URL, got: {self.base_url}")
+        owner, repo, branch, *path_parts = parsed.path.strip("/").split("/")
+        return owner, repo, branch, "/".join(path_parts)
+
+    def list_files(self):
+        api_url = f"https://api.github.com/repos/{self.owner}/{self.repo}/contents/{self.path}?ref={self.branch}"
+        response = self.client.fetch(api_url)
+        response.raise_for_status()
+        items = response.json()
+        return [item["name"] for item in items if item["type"] == "file"]
+
+    def read_file(self, name):
+        url = f"{self.base_url}/{name}"
+        response = self.client.fetch(url)  # Use the shared download client to fetch the file content
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        return response.text  # Return the content of the response as text
+
+    
+def pretty_print_files(file_source: FileSource):
+    """Helper function to print the list of files from a given FileSource."""
+    source_type = type(file_source).__name__
+    files = file_source.list_files()
+    print(f"Files in {source_type}:\n- " + "\n- ".join(files))
+
+
+if __name__ == "__main__":
+    # Example usage of LocalFileSource
+    directory = './data/local/'
+    local_source = LocalFileSource(directory)
+    pretty_print_files(local_source)
+
+    # Example usage of GitHubRawFileSource
+    base_url = 'https://raw.githubusercontent.com/luisrodriguesphd/ml-sandbox/main/design-patterns-basics/01_data_ingestion/data/remote'
+    github_source = GitHubRawFileSource(base_url)
+    pretty_print_files(github_source)
+    # Print the content of a specific file from GitHubRawFileSource
+    name = 'wine_part01.csv'  # Example file name to read
+    content = github_source.read_file(name)
+    print(f"Content of {name} from {type(github_source).__name__}:\n{content}")
+
+
+#===================================================================
+# Claude Code Review:
+#
+# The interface is now genuinely uniform. list_files() and read_file()
+# both work identically across LocalFileSource and GitHubRawFileSource
+# — verified end-to-end (with a one-off `truststore` shim to bypass
+# this machine's TLS interception, see note below): list_files()
+# correctly returns the six wine_partNN.csv names via the Contents
+# API, and read_file() returns clean CSV text via the raw URL. This is
+# Adapter actually delivering on its promise now: pretty_print_files()
+# runs unmodified against either source.
+#
+# _parse_raw_url() is a solid way to derive owner/repo/branch/path
+# from base_url without changing the constructor's signature — the
+# netloc check turns a wrong-URL mistake (e.g. the earlier github.com
+# /tree/ bug) into a clear ValueError instead of a confusing failure
+# downstream. As discussed when this was designed: it does depend on
+# raw.githubusercontent.com's URL shape being stable, which it has
+# been for years, so this is a reasonable, well-scoped assumption
+# rather than a fragile one.
+#
+# Nice touch: GitHubRawFileSource composes with the Singleton from
+# 01_singleton.py exactly as the docstring intends. One nuance worth
+# knowing — it specifically imports DownloadClientV3Alt2 (the one true
+# object-identity Singleton per that file's review comment), but for
+# this use case any of the six variants would have worked equally
+# well: GitHubRawFileSource only ever calls .fetch(), so it only needs
+# the *session* to be shared, not the client object's identity. Not a
+# bug, just worth knowing the choice was stricter than required.
+#
+# Carried over from before: `directory = './data/local/'` is still a
+# bare relative path, so running this file via the VS Code debugger
+# (cwd = workspace root by default) will still hit the same
+# FileNotFoundError discussed earlier unless the debugger's cwd is set
+# to this file's folder, or the path is resolved via `Path(__file__).parent`.
+#
+# Environment note (not a code issue): running this script's __main__
+# block as-is still raises `ssl.SSLCertVerificationError` on both the
+# Contents API call and the raw fetch — this machine's TLS is
+# intercepted (same root cause as the `uv --system-certs` fix needed
+# earlier), and `requests` uses its own bundled `certifi` trust store
+# rather than the OS one, so it doesn't trust the intercepting proxy's
+# certificate. `LocalFileSource` is unaffected since it does no
+# networking. Confirmed the adapter logic itself is correct by
+# temporarily injecting the OS trust store via the `truststore`
+# package (`truststore.inject_into_ssl()` before any requests are
+# made) — same idea as `--system-certs`, just requests has no built-in
+# flag for it. If you want this to run normally without the manual
+# shim, either add `truststore` as a project dependency and call
+# `inject_into_ssl()` once at startup, or set `REQUESTS_CA_BUNDLE` /
+# `SSL_CERT_FILE` to a corporate CA bundle if your org provides one.
+#===================================================================
