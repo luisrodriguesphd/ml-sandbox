@@ -26,15 +26,25 @@ Together: `Facade.predict()` calls into a `Decorator`-wrapped
 | `02_decorator.py` | Decorator (Structural) | Add caching, retry, and timing around the pipeline's predict call. |
 | `03_facade.py` | Facade (Structural) | Expose one simple `predict()` entry point over the whole subsystem. |
 
-## Requirements *(placeholder — fill in once implemented)*
+## Requirements
 
-- Python 3.8+
+- Python 3.12+ (managed automatically by `uv`)
 - No third-party packages required
 
-## How to Run *(placeholder — fill in once implemented)*
+Dependencies are managed at the repo root via `uv` — see the root
+`pyproject.toml`/`uv.lock`. From the repo root, run:
 
 ```bash
-python 01_builder.py
-python 02_decorator.py
-python 03_facade.py
+uv sync
+```
+
+## How to Run
+
+From the repo root (or from within this folder, `uv` finds the project
+automatically):
+
+```bash
+uv run python 01_builder.py
+uv run python 02_decorator.py
+uv run python 03_facade.py
 ```
