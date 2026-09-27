@@ -8,8 +8,8 @@ than one artificial scenario per pattern:
    and lazily streaming files from a local folder or this repo's public
    GitHub URLs.
 2. `02_training_framework/` — Factory Method, Strategy, Observer: a
-   pluggable model-training loop (model choice, scaling algorithm,
-   epoch-end callbacks).
+   pluggable online/incremental-learning loop (model choice, batch
+   preprocessing, post-update callbacks).
 3. `03_model_serving/` — Builder, Decorator, Facade: assembling and serving
    an inference pipeline behind one simple `predict()` call.
 
@@ -43,10 +43,11 @@ through this folder — GoF foundations first, then one phase per problem.
 
 - Python 3.12+ (managed automatically by [`uv`](https://docs.astral.sh/uv/))
 - `requests` (used only in `01_data_ingestion/`, for the GitHub-backed file
-  source) — the only runtime third-party dependency across this folder
-- `scikit-learn` — dev-only, used solely by
-  `01_data_ingestion/data/generate_data.py` to (re)generate the sample CSV
-  data; not required to run any of the pattern files themselves
+  source)
+- `scikit-learn` — used by `01_data_ingestion/data/generate_data.py` to
+  (re)generate the sample CSV data, and by `02_training_framework/` for its
+  `partial_fit`-capable online/incremental estimators and scalers (see that
+  folder's `INSTRUCTIONS.md`)
 - Basic understanding of Python classes, objects, and the material in
   `../oop-inheritance-basics/`
 

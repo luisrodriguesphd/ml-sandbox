@@ -10,9 +10,15 @@ Example to implement:
     A common `ScalingStrategy` interface with implementations such as
     `StandardScalerStrategy` and `MinMaxScalerStrategy`, injected into a
     `Trainer`/`Pipeline` object that calls `strategy.scale(X)` without
-    knowing which concrete strategy it holds.
-    Ties in naturally with the repo's existing
-    `linear-regression-feature-scaling` experiment.
+    knowing which concrete strategy it holds. Because `03_observer.py`'s
+    `Trainer` processes one incoming batch at a time rather than a fixed
+    dataset, each strategy needs to update its scaling statistics
+    incrementally too — there's no full dataset to fit against upfront.
+    scikit-learn's `StandardScaler`/`MinMaxScaler` both support
+    `partial_fit(X)` for exactly this: call it on each new batch (instead of
+    a one-shot `fit`) before transforming it. Ties in naturally with the
+    repo's existing `linear-regression-feature-scaling` experiment, which
+    only had to scale a fixed, fully-available dataset.
 
 Learning objectives:
     - Implement the Strategy pattern to make an algorithm swappable

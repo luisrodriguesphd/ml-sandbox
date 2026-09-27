@@ -3,22 +3,28 @@ Factory Method pattern (Creational) — Problem 2: ML Training & Experimentation
 Framework.
 
 Decouples "which model to create" from the training code that uses it, by
-instantiating different model types from a config string/dict rather than
-hard-coding a specific model class at every call site.
+instantiating different online-capable model types from a config
+string/dict rather than hard-coding a specific model class at every call
+site.
 
 Example to implement:
     A `create_model(model_type: str, **params)` factory (or a
-    `ModelFactory` class) that returns one of several interchangeable *toy*
-    model stand-ins — e.g. `LinearRegressionModel`, `RandomForestModel` —
-    each a small pure-Python class with a trivial/simulated
-    `fit(X, y, epochs: int)`/`predict` interface (no real ML library),
-    selected purely by a config value such as `model_type="random_forest"`.
-    The `epochs` parameter is required on every model produced by this
-    factory — `03_observer.py`'s `Trainer` drives a simulated per-epoch
-    loop through it and needs every model type to support that call shape,
-    however fake the underlying training is. The point of this file is the
-    object-creation mechanics, not training correctness; see this problem's
-    `INSTRUCTIONS.md` for why no ML library is used here.
+    `ModelFactory` class) that returns one of several interchangeable
+    scikit-learn estimators restricted to ones that support incremental
+    training via `partial_fit` — e.g. `SGDClassifier`/`SGDRegressor` (an
+    SGD-based linear model), `Perceptron`, a suitable Naive Bayes model
+    (`GaussianNB`/`MultinomialNB`), or `MLPClassifier`/`MLPRegressor` used
+    incrementally (an "online" neural network/MLP) — selected purely by a
+    config value such as `model_type="sgd"`. Every model produced by this
+    factory must support `partial_fit(X, y, ...)` — `03_observer.py`'s
+    `Trainer` drives a per-batch incremental update loop through it and
+    needs every model type to support that call shape (note: most
+    classifiers require a `classes=[...]` argument on their *first*
+    `partial_fit` call — worth handling consistently across model types).
+    The point of this file is the object-creation mechanics, not model
+    tuning; see this problem's `INSTRUCTIONS.md` for the full list of
+    in-scope estimators (and an optional River equivalent, if you want to
+    compare its `learn_one`-style API to scikit-learn's `partial_fit`).
 
 Learning objectives:
     - Implement the Factory Method pattern to centralize and decouple object

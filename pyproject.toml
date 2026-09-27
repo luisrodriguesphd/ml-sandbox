@@ -5,11 +5,14 @@ description = "Personal ML/Python learning sandbox"
 requires-python = ">=3.12"
 dependencies = [
     "requests>=2.31",
+    "scikit-learn>=1.4",
 ]
 
 [dependency-groups]
 dev = [
-    "scikit-learn>=1.4",
+    "mypy>=2.3.1",
+    "pytest>=9.1.1",
+    "ruff>=0.16.9",
 ]
 
 [tool.uv]
